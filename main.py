@@ -8,6 +8,7 @@ from torch_geometric import seed_everything
 from torch_geometric.graphgym.cmd_args import parse_args
 from torch_geometric.graphgym.config import (
     cfg,
+    set_cfg,
     dump_cfg,
     load_cfg,
     set_out_dir,
@@ -27,7 +28,20 @@ if __name__ == '__main__':
     # Load cmd line args
     args = parse_args()
     # Load config file
+    set_cfg(cfg)
     load_cfg(cfg, args)
+
+    # Automically setting appropriate(when less than the recommended) T for PC model
+    if cfg.pc.use_pc:
+        if 4*(1+cfg.gnn.layers_mp) > cfg.pc.T: # TASK
+            newT= 4*(1+cfg.gnn.layers_mp)
+            logging.info(f'Info: Automatically changed T from {cfg.pc.T} to the appropriate default from {newT}')
+            cfg.pc.T= newT
+
+
+
+
+
     set_out_dir(cfg.out_dir, args.cfg_file)
     # Set Pytorch environment
     torch.set_num_threads(cfg.num_threads)

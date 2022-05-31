@@ -1,0 +1,13 @@
+# (1) dataset configurations
+dataset.name dataset ['PubMed','CiteSeer','Cora']
+# dataset.task task ['node']
+dataset.transductive: trans ['True']
+# (2) recommended GNN design space,
+gnn.layers_mp l_mp [32,8,2]
+gnn.stage_type stage ['my_stack','my_skipsum']
+gnn.layer_type l_type ['gcnconv','sageconv','gatconv']
+gnn.agg agg ['add','mean','max']
+pc.use_pc is_pc [True]
+pc.optimizer_p_lr p_lr [1e-2,1e-3,1e-4,1e-5]
+pc.optimizer_x_lr x_lr [0.1,0.5,1.0]
+pc.update_p_at update_p_t ['all','last']

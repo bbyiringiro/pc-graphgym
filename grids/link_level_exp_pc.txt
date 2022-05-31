@@ -1,0 +1,14 @@
+# (1) dataset configurations
+dataset.format format ['OGB']
+dataset.name dataset ['ogbl-collab']
+# dataset.task task ['graph']
+dataset.transductive trans ['True']
+# (2) The GNN design space,
+gnn.layers_mp l_mp [2,4]
+gnn.stage_type stage ['my_stack','my_skipsum','skipconcat']
+gnn.layer_type l_type ['gcnconv','sageconv','gatconv']
+gnn.agg agg ['add','mean','max']
+pc.use_pc is_pc [True]
+pc.optimizer_p_lr p_lr [1e-2,1e-3,1e-4,1e-5]
+pc.optimizer_x_lr x_lr [0.1,0.5,1.0]
+pc.update_p_at update_p_t ['all','last']

@@ -1,0 +1,53 @@
+out_dir: results
+print: both
+# device: cpu
+view_emb: True
+dataset:
+  format: PyG
+  name: Cora
+  task: node
+  task_type: classification
+  node_encoder: false
+  node_encoder_name: Atom
+  edge_encoder: false
+  edge_encoder_name: Bond
+  split:
+  - 0.8
+  - 0.1
+  - 0.1
+train:
+  mode: pc_train
+  auto_resume: false
+  batch_size: 128
+  eval_period: 1
+  ckpt_period: 100
+  sampler: full_batch
+model:
+  type: pc_network
+  # loss_fun: cross_entropy
+  edge_decoding: dot
+  # graph_pooling: add
+gnn:
+  layers_pre_mp: 1
+  layers_mp: 3
+  layers_post_mp: 1
+  dim_inner: 64
+  layer_type: gcnconv
+  stage_type: my_skipsum
+  batchnorm: false
+  act: prelu
+  dropout: 0.0
+  agg: add
+  normalize_adj: false
+  head: default
+optim:
+  max_epoch: 500
+pc:
+ use_pc: true
+ T: -1
+ update_x_at : all
+ optimizer_x_fn : Adam
+ optimizer_x_lr  : 0.1
+ update_p_at : last
+ optimizer_p_fn : Adam
+ optimizer_p_lr  : 0.001

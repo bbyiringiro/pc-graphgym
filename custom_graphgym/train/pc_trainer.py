@@ -21,65 +21,39 @@ from torch_geometric.graphgym.utils.epoch import (
 
 mse_loss = torch.nn.MSELoss(reduction=cfg.model.size_average)
 criterion = torch.nn.CrossEntropyLoss()
+
 def loss_fn(output, pred_score_res, true_res):
     pred, true = output
     pred_score_res.append(pred)
     true_res.append(true)
-
-    if cfg.dataset.task =='edge' or cfg.dataset.task =='link_pred': # TASK
+    # temporary using mse_loss here because high memory requirement for link_pred task
+    if cfg.dataset.task =='edge' or cfg.dataset.task =='link_pred': # TASK 
         return mse_loss(pred, true)
-
-#     return criterion(output[_train_mask], _target[_train_mask])
-    # num_out_features =  pred.shape[-1
-    true_one_hot = torch.zeros((true.shape[0], pred.shape[-1]),device=cfg.device).scatter_(1, true.reshape(true.shape[0],1), 1)
-    # print(true_one_hot.shape)
-    
-    # target_one_hot = target_one_hot.to(cfg.device)
-    # print((output[_train_mask] - target_one_hot[_train_mask]).pow(2).sum() * 0.5)
-    _pred_score = 0
-    return (pred - true_one_hot).pow(2).sum() * 0.5
+    else:
+        # return criterion(output[_train_mask], _target[_train_mask])
+        # num_out_features =  pred.shape[-1
+        true_one_hot = torch.zeros((true.shape[0], pred.shape[-1]),device=cfg.device).scatter_(1, true.reshape(true.shape[0],1), 1)
+        # print(true_one_hot.shape)
+        
+        # target_one_hot = target_one_hot.to(cfg.device)
+        # print((output[_train_mask] - target_one_hot[_train_mask]).pow(2).sum() * 0.5)
+        return (pred - true_one_hot).pow(2).sum() * 0.5
 
 def callback_after_t(pc_trainer, batch, orginal_x):
     batch.x = orginal_x # reset the input
 def train_epoch(logger, loader,  pc_trainer, scheduler):
     pc_trainer._model.train()
-    # model.train()
-    # time_start = time.time()
-    # for batch in loader:
-    #     batch.split = 'train'
-    #     optimizer.zero_grad()
-    #     batch.to(torch.device(cfg.device))
-    #     pred, true = model(batch)
-    #     loss, pred_score = compute_loss(pred, true)
-    #     loss.backward()
-    #     optimizer.step()
-    #     logger.update_stats(true=true.detach().cpu(),
-    #                         pred=pred_score.detach().cpu(), loss=loss.item(),
-    #                         lr=scheduler.get_last_lr()[0],
-    #                         time_used=time.time() - time_start,
-    #                         params=cfg.params)
-    #     time_start = time.time()
-    # scheduler.step()
+
     time_start = time.time()
 
     for batch in loader:
     
-        loss = 0.0
-        energy = 0.0
-        overall = 0.0
+        # loss = 0.0
+        # energy = 0.0
+        # overall = 0.0
         batch.split = 'train'
         batch.to(torch.device(cfg.device))
-    #     pred, true = pc_trainer._model(batch)
-    #     loss, pred_score = compute_loss(pred, true)
-    #     loss.backward()
-    #     # optimizer.step()
-    #     logger.update_stats(true=true.detach().cpu(),
-    #                         pred=pred_score.detach().cpu(), loss=loss.item(),
-    #                         lr=scheduler.get_last_lr()[0],
-    #                         time_used=time.time() - time_start,
-    #                         params=cfg.params)
-    #     time_start = time.time()
-    # scheduler.step()
+
         orginal_x = batch.x
         pred_score_res =[]
         true_res  = []
@@ -154,7 +128,8 @@ def pc_trainer(loggers, loaders, model, optimizer, scheduler):
     """
 
     pc_trainer = pc.PCTrainer(
-        model,
+        
+        ,
         T=cfg.pc.T if cfg.pc.use_pc else 1, #TASK
         update_x_at=cfg.pc.update_x_at,
         optimizer_x_fn=eval(f'torch.optim.{cfg.pc.optimizer_x_fn}'),
