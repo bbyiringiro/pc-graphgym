@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -127,3 +128,28 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+=======
+__pycache__/
+.pytest_cache/
+data/
+build/
+dist/
+alpha/
+runs/
+.cache/
+.eggs/
+lightning_logs/
+outputs/
+results/
+datasets/
+*.egg-info/
+.ipynb_checkpoints
+.coverage
+.coverage.*
+coverage.xml
+.vscode
+.idea
+.venv
+*.out
+*.pt
+>>>>>>> remotes/origin/master
