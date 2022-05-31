@@ -22,7 +22,7 @@ gnn:
   layers_pre_mp: 1
   layers_mp: 2
   layers_post_mp: 1
-  dim_inner: 300
+  dim_inner: 64
   layer_type: gcnconv
   stage_type: stack
   batchnorm: true
